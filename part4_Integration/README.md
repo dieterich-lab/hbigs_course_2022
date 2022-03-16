@@ -62,7 +62,7 @@ print(setdiff(package_list, installed.packages()[, 1]))
 > Missing **CRAN** packages can be installed by simply running:
 
 ```python
-install.packages("name_of_missing_package", dependencies = TRUE)
+install.packages("PackageName", dependencies = TRUE)
 ```
 
 > Missing **GitHub** packages can be installed by simply running:
@@ -72,4 +72,11 @@ require(devtools)
 install_github('DeveloperName/PackageName')
 ```
 
-> Missing **Bioconductor** packages can be installed by following the instructions provided on the Bioconductor web-pages dedicated to each of the packages.
+> Missing **Bioconductor** packages can be installed by following the instructions provided on the Bioconductor web-pages dedicated to each of the packages or by running:
+
+```python
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("PackageName")
+```
