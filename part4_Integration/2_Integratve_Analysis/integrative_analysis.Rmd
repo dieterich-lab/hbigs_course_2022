@@ -1,0 +1,254 @@
+---
+title: "Integrative Analysis"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+## Integrative Analysis
+
+Below are provided Integrative Analysis of the available Proteomics and Transcriptomics data. The analysis steps have been applied over the _EGF-driven protein synthesis_ case-study data from [D.A. Rothenberg et al. A Proteomics Approach to Profiling the Temporal Translational Response to Stress and Growth. iScience. 2018; 9:367-381](https://www.sciencedirect.com/science/article/pii/S2589004218301949?via%3Dihub) at _time-point 60min_.
+
+### Loading of R-Packages
+We start by setting a seed for reproducibility of the results and then loading the R-packages we need to use for our analysis.
+
+```{r chunk1, echo=TRUE, eval=TRUE, include=TRUE, warning=FALSE, comment=FALSE, message=FALSE}
+set.seed(1234)
+
+library("readr")
+library("vsn")
+library("dplyr")
+library("limma")
+library("ggplot2")
+library("ggrepel")
+library("BioNet")
+library("igraph")
+library("OmnipathR")
+library("ggpubr")
+library("mixOmics")
+library("M2SMF")
+library("SNFtool")
+library("NEMO")
+library("fgsea")
+library("GSA")
+library("VennDiagram")
+library("RColorBrewer")
+library("ggVennDiagram")
+```
+
+### Loading the Data
+We load the Proteomics and Gene Expression data.
+
+```{r chunk2, echo=TRUE, eval=TRUE, include=TRUE, warning=FALSE, comment=FALSE, message=FALSE}
+# Differential Gene Expression Data
+load(file = "../Data/ttop_dge.RData")
+head(ttop_dge[, 1:(ncol(ttop_dge)-1)])
+
+# Differential Protein Abundance
+load(file = "../Data/ttop_prot.RData")
+head(ttop_prot)
+
+# Processed Gene Expression Data across EGF and PBS samples at time-point 60min
+load(file = "../Data/proc_gene_data.RData")
+head(proc_gene_data)
+
+# Processed Protein Abundance Data across EGF and PBS samples at time-point 60min
+load(file = "../Data/proc_prot_data.RData")
+head(proc_prot_data)
+```
+
+### Correlation Analysis
+> We can look at the **correlation** in the expression between **Differential** Gene Expression and the Abundance of the corresponding Proteins.
+
+```{r chunk3, echo=TRUE, eval=TRUE, include=TRUE, warning=FALSE, comment=FALSE, message=FALSE}
+# We find common Genes and and filter each data
+common_genes <- intersect(x = ttop_dge$external_gene_name, y = ttop_prot$Gene)
+dge <- ttop_dge[which(ttop_dge$external_gene_name%in%common_genes), ]
+prot <- ttop_prot[which(ttop_prot$Gene%in%common_genes), ]
+
+# We create the data-frame for plotting the correlation
+data <- matrix(data = , nrow = length(common_genes), ncol = 2)
+rownames(data) <- common_genes[order(common_genes)]
+colnames(data) <- c("diff_genes", "diff_prot")
+data[, 1] <- dge$logFC[order(dge$external_gene_name)]
+data[, 2] <- prot$EGF_60_vs_PBS_60_diff[order(prot$Gene)]
+
+data <- as.data.frame(data)
+head(data)
+
+# We do ascatter plot of gene expression and protein abundance and estimate the 
+# Pearson correlation between them
+sp <- ggscatter(data, x = "diff_genes", y = "diff_prot", #mention data and axis 
+                add = "reg.line",  # Add regression line
+                add.params = list(color = "red", fill = "lightgray"), # Customize regression line
+                conf.int = TRUE # Add confidence interval
+)+ stat_cor(method = "pearson", label.x = 3, label.y = 30)# Add correlation coefficient
+sp
+```
+
+> We can additionally look into the **correlation** in the expression between Gene Expression and the Abundance of the corresponding Proteins across samples.
+
+```{r chunk4, fig.height = 10, fig.width = 10, echo=TRUE, eval=TRUE, include=TRUE, warning=FALSE, comment=FALSE, message=FALSE}
+## Correlation Plot
+cim(cor(t(proc_gene_data), 
+        t(proc_prot_data)), 
+    xlab = "proteins", ylab = "genes")
+```
+
+### Clustering Analysis
+We perform **Clustering** in order to identify and group sets of Genes which behave similarly in the **Diffenrential** Gene and Transcript data. For this we can rely on the [NEMO R-Package](https://github.com/Shamir-Lab/NEMO).
+
+We start by first filtering the Proteomics and Transcriptomics data-sets by common Genes.
+
+```{r chunk5, fig.height = 6, fig.width = 6, echo=TRUE, eval=TRUE, include=TRUE, warning=FALSE, comment=FALSE, message=FALSE}
+# Filter for Common Genes
+common_genes <- intersect(x = ttop_dge$external_gene_name, y = ttop_prot$Gene)
+omic1 <- ttop_dge[which(ttop_dge$external_gene_name%in%common_genes), ]
+omic1 <- as.matrix(omic1$logFC[order(omic1$external_gene_name)])
+omic2 <- ttop_prot[which(ttop_prot$Gene%in%common_genes), ]
+omic2 <- as.matrix(omic2$EGF_60_vs_PBS_60_diff[order(omic2$Gene)])
+rownames(omic1) <- common_genes[order(common_genes)]
+rownames(omic2) <- common_genes[order(common_genes)]
+
+omics.list = list(t(omic1), t(omic2))
+```
+
+> Supervised Clustering where we predefine the number of clusters (in this case 2).
+
+```{r chunk6, fig.height = 4, fig.width = 6, echo=TRUE, eval=TRUE, include=TRUE, warning=FALSE, comment=FALSE, message=FALSE}
+# Supervised Clustering - 2 Clusters
+clustering = nemo.clustering(omics.list = omics.list, num.clusters = 2)
+
+data <- cbind(omic1, omic2, as.matrix(clustering))
+colnames(data) <- c("diff_genes", "diff_prot", "cluster")
+data <- as.data.frame(data)
+data$cluster <- as.factor(data$cluster)
+head(data)
+
+p <- ggplot(data, aes(x=diff_genes, y=diff_prot, color=cluster, shape=cluster)) +
+  geom_point() + 
+  theme_classic() +
+  ggtitle("Scatter Plot and Clustering")
+p+scale_color_brewer(palette="Dark2")
+
+```
+
+> Unsupervised Clustering where we let NEMO decide itself the values.
+
+```{r chunk7, fig.height = 4, fig.width = 6, echo=TRUE, eval=TRUE, include=TRUE, warning=FALSE, comment=FALSE, message=FALSE}
+# Unsupervised Clustering
+clustering = nemo.clustering(omics.list = omics.list, num.clusters = NA)
+
+data <- cbind(omic1, omic2, as.matrix(clustering))
+colnames(data) <- c("diff_genes", "diff_prot", "cluster")
+data <- as.data.frame(data)
+data$cluster <- as.factor(data$cluster)
+head(data)
+
+p <- ggplot(data, aes(x=diff_genes, y=diff_prot, color=cluster, shape=cluster)) +
+  geom_point() + 
+  theme_classic() +
+  ggtitle("Scatter Plot and Clustering")
+p+scale_color_brewer(palette="Dark2")
+```
+
+### Pathway Analysis
+**Gene Set Enrichment Analysis (GSEA)** is used to estimate **significantly regulated Pathway Sets**. We can perform GSEA on both differential gene expression as well as differential abundance data. From the individual analyses, we can then identify a consensus set of **significantly regulated pathways**.
+
+```{r chunk8, fig.height = 4, fig.width = 6, echo=TRUE, eval=TRUE, include=TRUE, warning=FALSE, comment=FALSE, message=FALSE}
+# Loading the Pathway Sets 
+# MSigDB: http://www.gsea-msigdb.org/gsea/msigdb/collections.jsp#C2
+load(file = "../Data/reactome_genelist.RData")
+
+# Pathway Analysis from Differential Gene Expression Data
+stats <- ttop_dge$logFC
+names(stats) <- ttop_dge$external_gene_name
+gseaGenes <- fgseaSimple(pathways = genelist, stats = stats, nperm = 10000, 
+                         minSize = 5, maxSize = Inf)
+
+# Pathway Analysis from Differential Protein Abundance Data
+stats <- ttop_prot$EGF_60_vs_PBS_60_diff
+names(stats) <- ttop_prot$Gene
+gseaProt <- fgseaSimple(pathways = genelist, stats = stats, nperm = 10000, 
+                        minSize = 5, maxSize = Inf)
+
+# Identifying Pathway Sets regulated on both sets (padj<=0.05)
+setGenes <- gseaGenes$pathway[which(gseaGenes$padj<=0.05)]
+setProt <- gseaProt$pathway[which(gseaProt$padj<=0.05)]
+
+x <- list(setGenes = setGenes, setProt = setProt)
+ggVennDiagram(x)
+
+print(intersect(x = setGenes, y = setProt))
+```
+
+### Functional Modules
+Identification of Functional Protein Interaction Modules with [BioNet R-Package](https://www.bioconductor.org/packages/release/bioc/html/BioNet.html).
+
+> Obtaining the _p-value_ scores from the Differential Gene Expression and Differential Protein Abundance Data.
+
+```{r chunk9, fig.height = 4, fig.width = 6, echo=TRUE, eval=TRUE, include=TRUE, warning=FALSE, comment=FALSE, message=FALSE}
+# Filtering DGE and DPA for common genes and retreiving p-values
+data <- matrix(data = , nrow = length(common_genes), ncol = 2)
+rownames(data) <- common_genes[order(common_genes)]
+colnames(data) <- c("diff_genes", "diff_prot")
+data[, 1] <- dge$PValue[order(dge$external_gene_name)]
+data[, 2] <- prot$EGF_60_vs_PBS_60_p.val[order(prot$Gene)]
+data <- as.data.frame(data)
+head(data)
+```
+
+> Obtaining protein interactions from the [OmniPathR R-Package](https://bioconductor.org/packages/release/bioc/html/OmnipathR.html) and creating an _igraph_ object from the retreived interactions.
+
+```{r chunk10, fig.height = 4, fig.width = 6, echo=TRUE, eval=TRUE, include=TRUE, warning=FALSE, comment=FALSE, message=FALSE}
+# Obtaining interactions from OmniPath
+interactions <- import_omnipath_interactions()
+interactions <- unique(as.data.frame(interactions[, 3:4]))
+head(interactions)
+
+# Transforming the obtained network into an _igraph_ object.
+g <- graph_from_data_frame(d = interactions, directed = TRUE)
+g <- as_graphnel(graph = g)
+g
+
+```
+
+> Creating a subgraph with the nodes given in the the differential gene and protein expression data and including their direct neighbors.
+
+```{r chunk11, fig.height = 4, fig.width = 6, echo=TRUE, eval=TRUE, include=TRUE, warning=FALSE, comment=FALSE, message=FALSE}
+subnet <- subNetwork(rownames(data), g)
+subnet
+```
+
+> Aggregating the p-values from the DGE and DPA data.
+
+```{r chunk12, fig.height = 4, fig.width = 6, echo=TRUE, eval=TRUE, include=TRUE, warning=FALSE, comment=FALSE, message=FALSE}
+pvals <- cbind(data$diff_genes, data$diff_prot)
+rownames(pvals) <- rownames(data)
+pval <- aggrPvals(pvals, order = 2, plot = TRUE)
+```
+
+> Obtaining the Functional Network Modules
+
+```{r chunk13, fig.height = 4, fig.width = 6, echo=TRUE, eval=TRUE, include=TRUE, warning=FALSE, comment=FALSE, message=FALSE}
+fb <- fitBumModel(pval, plot = FALSE)
+scores <- scoreNodes(subnet, fb, fdr = 0.5)
+module <- runFastHeinz(g, scores)
+```
+
+> Plotting the resulting netwoks.
+
+```{r chunk14, fig.height = 8, fig.width = 8, echo=TRUE, eval=TRUE, include=TRUE, warning=FALSE, comment=FALSE, message=FALSE}
+logFC <- dge$logFC
+names(logFC) <- dge$external_gene_name
+
+plotModule(module, scores = scores, diff.expr = logFC)
+```
