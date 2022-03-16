@@ -59,6 +59,8 @@ package_list <- c("readr", "dplyr", "tidyr", "ggplot2", "ggrepel", "knitr", "tid
 print(setdiff(package_list, installed.packages()[, 1]))
 ```
 
+You can install the missing packages by following the instructions below:
+
 > Missing **CRAN** packages can be installed by simply running:
 
 ```python
