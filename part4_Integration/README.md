@@ -14,7 +14,7 @@ Here are provided scripts for running a standard pipeline for Processing and Ana
 ### 2.  Integration
 Here are provided the scripts for Integrated Multi-Omics analysis of the Proteomics and Transcriptomics data. The analyses provided include correlation between the two data types, clustering analysis, pathway enrichment, and network analyses.
 
-## Depdencies
+## Dependencies
 
 Before running the scripts, please make sure to have installed the following R-Package dependencies:
 
