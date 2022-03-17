@@ -1,0 +1,46 @@
+#!/bin/bash
+
+# install packages in a fresh virtual environment
+
+# course github directory
+PARENT=$HOME/hbigs_course_2019/ribosome-profiling
+
+# create virtual environment
+ENVLOC=$PARENT/envs
+if [[ -L "${ENVLOC}" && -d "${ENVLOC:+$ENVLOC/}" ]]; then
+ echo "[ERROR]: Directory already exists!"
+ exit 1
+fi
+mkdir $ENVLOC
+python3 -m venv $ENVLOC/hbigs19-ribo
+# activate the environment
+source $ENVLOC/hbigs19-ribo/bin/activate
+# upgrade pip and wheel
+pip3 install --upgrade pip setuptools wheel
+
+# clone the git repository and install rpbp
+cd $PARENT
+git clone https://github.com/dieterich-lab/rp-bp.git
+cd rp-bp
+pip3 --verbose install -r requirements.txt . 2>&1 | tee install.log
+
+# also install slurm magic for jupyter notebook
+cd $PARENT
+git clone https://github.com/NERSC/slurm-magic.git
+cd slurm-magic
+pip3 --verbose install . 2>&1 | tee install.log
+
+# add jupyter kernel for this environment
+pip3 install ipykernel
+python3 -m ipykernel install --user --name=hbigs19-ribo
+
+# deactivate the environment
+deactivate
+
+# set-up directory structure for the analysis
+# we will write remaining files together... and run the analysis 
+# via a jupyter notebook
+DIRLOC=riboSeqHBIGS19-downsampled-analysis
+cd $PARENT
+mkdir -p $DIRLOC/config $DIRLOC/riboseq-results
+
