@@ -1,4 +1,5 @@
-# HBIGS course 2021/22: Introduction to computational RNA biology: Part 4 - Proteomics and Integrative Analysis
+# HBIGS course 2021/22: Introduction to computational RNA biology
+## Part 4 - Proteomics and Integrative Analysis
 
 ## Description
 
@@ -51,6 +52,17 @@ Before running the scripts, please make sure to have installed the following R-P
 **24.** [OmnipathR](https://github.com/saezlab/OmnipathR)
 **25.** [NEMO](https://github.com/Shamir-Lab/NEMO)
 
+
+To start a R-Console, you first need to make sure the R module is loaded
+
+```bash
+# check which modules are loaded
+module list
+# if the output contains e.g. R/4.0.5_deb10(default), you are fine...
+# ...otherwise load the R module by typing "module load R"
+# start R-Console
+R
+```
 
 You can verify missing packages by running the following in the R-Console:
 

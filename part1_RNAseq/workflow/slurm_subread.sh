@@ -11,13 +11,7 @@
 #SBATCH --mem=40G
 #SBATCH -J "featureCount"
 
-# module load R
+module load R
 
-# check if we have 6 arguments
-#if [ ! $# == 2 ]; then
-#  echo "Usage: $0 [BAM folder] [GTF] [save to] [tmp]"
-#  exit
-#fi
-
-Rscript /beegfs/homes/tjakobi/work/scripts/subread_feature_counts.R $@
+Rscript subread_feature_counts.R $@
  

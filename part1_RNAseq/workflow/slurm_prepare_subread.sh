@@ -11,6 +11,8 @@
 #SBATCH --mem=1G
 #SBATCH -J "prepare-subread"
 
+module load parallel
+
 if [ ! $# == 2 ]; then
   echo "Usage: $0 [STAR folder] [BAM folder] "
   exit
