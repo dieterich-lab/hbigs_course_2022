@@ -1,9 +1,17 @@
 #!/bin/bash
 
-# install packages in a fresh virtual environment
+# define course/repository name/year
+COURSE=hbigs_course_2022
+
+# Do not modify below
+# -----------------------------------------------
+# Install packages in a fresh virtual environment
+
+ARR=(${COURSE//_/ })
+NAME="${ARR[0]}${ARR[2]}"
 
 # course github directory
-PARENT=$HOME/hbigs_course_2019/ribosome-profiling
+PARENT=$HOME/$COURSE/part3_Riboseq
 
 # create virtual environment
 ENVLOC=$PARENT/envs
@@ -12,9 +20,9 @@ if [[ -L "${ENVLOC}" && -d "${ENVLOC:+$ENVLOC/}" ]]; then
  exit 1
 fi
 mkdir $ENVLOC
-python3 -m venv $ENVLOC/hbigs19-ribo
+python3 -m venv $ENVLOC/${NAME^^}-ribo
 # activate the environment
-source $ENVLOC/hbigs19-ribo/bin/activate
+source $ENVLOC/${NAME^^}-ribo/bin/activate
 # upgrade pip and wheel
 pip3 install --upgrade pip setuptools wheel
 
@@ -22,17 +30,17 @@ pip3 install --upgrade pip setuptools wheel
 cd $PARENT
 git clone https://github.com/dieterich-lab/rp-bp.git
 cd rp-bp
-pip3 --verbose install -r requirements.txt . 2>&1 | tee install.log
+pip3 --verbose install -r requirements.txt . 2>&1 | tee rpbp-install.log
 
 # also install slurm magic for jupyter notebook
 cd $PARENT
 git clone https://github.com/NERSC/slurm-magic.git
 cd slurm-magic
-pip3 --verbose install . 2>&1 | tee install.log
+pip3 --verbose install . 2>&1 | tee slurm-magic-install.log
 
 # add jupyter kernel for this environment
 pip3 install ipykernel
-python3 -m ipykernel install --user --name=hbigs19-ribo
+python3 -m ipykernel install --user --name="${NAME^^}-ribo"
 
 # deactivate the environment
 deactivate
@@ -40,7 +48,7 @@ deactivate
 # set-up directory structure for the analysis
 # we will write remaining files together... and run the analysis 
 # via a jupyter notebook
-DIRLOC=riboSeqHBIGS19-downsampled-analysis
+DIRLOC=riboSeq${NAME^^}-downsampled-analysis
 cd $PARENT
 mkdir -p $DIRLOC/config $DIRLOC/riboseq-results
 
