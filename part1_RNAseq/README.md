@@ -38,6 +38,18 @@ if (!require("BiocManager", quietly = TRUE))
 BiocManager::install("Rsubread")
 ```
 
+**Note:** It is possible that you are prompted with the following message, if you install libraries for the first time in your account
+
+```bash
+Warning in install.packages("optparse") :
+  'lib = "/beegfs/biosw/R/4.0.5_deb10/lib/R/library"' is not writable
+Would you like to use a personal library instead? (yes/No/cancel) 
+```
+
+You can safely answer `yes` to these questions. The R packages will be installed locally in your $HOME directory.
+After installing packages, to quit the R-Console, just type `quit()`. You don't need to save your workspace.
+
+
 ## RNA-seq workflow
 
 RNA sequencing (RNA-seq) is used to interrogate in an unbiased manner the transcriptome, by quantifying RNA transcript abundance and diversity.

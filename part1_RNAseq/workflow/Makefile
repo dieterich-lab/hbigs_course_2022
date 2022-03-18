@@ -26,9 +26,9 @@
 ################## MAKEFILE STARTS BELOW #######################
 
 
-.PHONY: clean check_clean SYMLINK FASTQC FLEXBAR RRNA MAPPING PREPARE_DCC DCC PREPARE_SUBREAD SUBREAD
+.PHONY: clean check_clean SYMLINK FASTQC FLEXBAR RRNA MAPPING PREPARE_SUBREAD SUBREAD
 
-all: SYMLINK FASTQC FLEXBAR BOWTIE STAR DCC SUBREAD STRINGTIE MULTIQC
+all: SYMLINK FASTQC FLEXBAR BOWTIE STAR SUBREAD MULTIQC
 # Rules for renaming all files to user-identifiable names
 
 SYMLINK: CREATE_RAW_DIR raw_data/SRR7451187__Rep_1__MP60-1__mRNA_Seq__PBS_R1.fastq.gz raw_data/SRR7451179__Rep_2__MP60-2__mRNA_Seq__PBS_R1.fastq.gz raw_data/SRR7451182__Rep_1__ME60-1__mRNA_Seq__EGF_R1.fastq.gz raw_data/SRR7451201__Rep_2__ME60-2__mRNA_Seq__EGF_R1.fastq.gz raw_data/SRR7451187__Rep_1__MP60-1__mRNA_Seq__PBS_R2.fastq.gz raw_data/SRR7451179__Rep_2__MP60-2__mRNA_Seq__PBS_R2.fastq.gz raw_data/SRR7451182__Rep_1__ME60-1__mRNA_Seq__EGF_R2.fastq.gz raw_data/SRR7451201__Rep_2__ME60-2__mRNA_Seq__EGF_R2.fastq.gz
