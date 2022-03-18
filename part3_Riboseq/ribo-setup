@@ -3,6 +3,9 @@
 # define course/repository name/year
 COURSE=hbigs_course_2022
 
+# this is important that we use the right Python version!
+module load python3/3.6.13_deb10
+
 # Do not modify below
 # -----------------------------------------------
 # Install packages in a fresh virtual environment
