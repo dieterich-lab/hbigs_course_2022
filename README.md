@@ -43,7 +43,7 @@ their content. We bear no responsibility for the accuracy of their content.
 
 | Walk-in session | Topic | Instructor |
 :-----------------|:------|:----------|
-| 16.00           | [Setting Up WireGuard](https://github.com/dieterich-lab/hbigs_course_2022/wiki/Preparation-Workshop), [installing missing packages 1](part4_Integration/README.md#dependencies), and [installing missing packages 2](part1_RNAseq/README.md#dependencies) | HW, EG, EB  |
+| 16.00           | [Setting Up WireGuard](https://github.com/dieterich-lab/hbigs_course_2022/wiki/Preparation-Workshop)<br>[installing missing packages 1](part1_RNAseq/README.md#dependencies)<br>[installing missing packages 2](part4_Integration/README.md#dependencies), and  | HW, EG, EB  |
 
 | Day 1 | Topic | Instructor |
 :----------|:----------|:----------|
@@ -58,9 +58,10 @@ their content. We bear no responsibility for the accuracy of their content.
 | 13.30-17.00 | [Proteomics and Integrative Analysis](part4_Integration/README.md) | EG |
 
 
-HW: Harald Wilhelmi (system administrator, <it@dieterichlab.org>)
-
-EG: Enio Gjerga (<e.gjerga@uni-heidelberg.de>), EB: Etienne Boileau (<boileau@uni-heidelberg.de>), TBB: Thiago Britto Borges (<Thiago.BrittoBorges@uni-heidelberg.de>)
+HW: Harald Wilhelmi (system administrator, <it@dieterichlab.org>)<br>
+EG: Enio Gjerga (<e.gjerga@uni-heidelberg.de>)<br> 
+EB: Etienne Boileau (<boileau@uni-heidelberg.de>)<br>
+TBB: Thiago Britto Borges (<Thiago.BrittoBorges@uni-heidelberg.de>)
 
 
 
