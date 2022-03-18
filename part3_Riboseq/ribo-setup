@@ -28,7 +28,10 @@ pip3 install --upgrade pip setuptools wheel
 
 # clone the git repository and install rpbp
 cd $PARENT
-git clone https://github.com/dieterich-lab/rp-bp.git
+# git clone https://github.com/dieterich-lab/rp-bp.git
+# clone latest tag for running the example
+# we're going to be in a detached HEAD, but we're not going to make any changes...
+git clone -b 2.0.0 https://github.com/dieterich-lab/rp-bp.git
 cd rp-bp
 pip3 --verbose install -r requirements.txt . 2>&1 | tee rpbp-install.log
 
