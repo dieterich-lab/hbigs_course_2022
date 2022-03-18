@@ -10,8 +10,6 @@
 #SBATCH -c 16
 #SBATCH --mem=40G
 #SBATCH -J "featureCount"
-#SBATCH --mail-type=END,FAIL,TIME_LIMIT_80
-#SBATCH --mail-user=tobias.jakobi@med.uni-heidelberg.de
 
 # module load R
 

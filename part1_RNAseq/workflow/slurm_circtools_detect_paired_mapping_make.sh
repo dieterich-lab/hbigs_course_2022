@@ -10,10 +10,9 @@
 #SBATCH -c 40
 #SBATCH --mem=250G
 #SBATCH -J "circtools alignment"
-#SBATCH --mail-type=END,FAIL,TIME_LIMIT_80
-#SBATCH --mail-user=tobias.jakobi@med.uni-heidelberg.de
 
-#module load star
+module load star/2.6.1d
+module load samtools
 
 # check if we have 6 arguments
 if [ ! $# == 6 ]; then
@@ -45,11 +44,12 @@ TMP_RND=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 10 | head -n 1`
 OLD_PATH=`pwd`
 
 # main mapping part
+# --outTmpDir /scratch/global_tmp/${TMP_RND}_${target}/\
 
 STAR	--runThreadN 40\
 	--genomeDir $1\
 	--genomeLoad NoSharedMemory\
-	--outTmpDir /scratch/global_tmp/${TMP_RND}_${target}/\
+    --outTmpDir ${TMP_RND}_${target}/\
 	--readFilesIn $2 $3\
 	--readFilesCommand zcat\
 	--outFileNamePrefix $4/$target/\
@@ -112,12 +112,12 @@ cd $OLD_PATH
 ## done with main mapping
 
 ## mapping mate1 now
-
+# 	--outTmpDir /scratch/global_tmp/${TMP_RND}_${target}_mate1/\
 
 STAR	--runThreadN 40\
 	--genomeDir $1\
 	--genomeLoad NoSharedMemory\
-	--outTmpDir /scratch/global_tmp/${TMP_RND}_${target}_mate1/\
+	--outTmpDir ${TMP_RND}_${target}_mate1/\
 	--readFilesIn $4/$target/Unmapped.out.mate1.gz\
 	--readFilesCommand zcat\
 	--outFileNamePrefix $4/$target/mate1/ \
@@ -177,13 +177,13 @@ gzip Unmapped.out.mate1
 cd $OLD_PATH
 
 ## done with mate1 mapping
-
+# 	--outTmpDir /scratch/global_tmp/${TMP_RND}_${target}_mate2/\
 ## mapping mate2 now
 
 STAR	--runThreadN 40\
 	--genomeDir $1\
 	--genomeLoad NoSharedMemory\
-	--outTmpDir /scratch/global_tmp/${TMP_RND}_${target}_mate2/\
+	--outTmpDir ${TMP_RND}_${target}_mate2/\
 	--readFilesIn $4/$target/Unmapped.out.mate2.gz\
 	--readFilesCommand zcat\
 	--outFileNamePrefix $4/$target/mate2/ \
@@ -242,7 +242,9 @@ gzip Unmapped.out.mate1
 
 # remove tmp dirs
 
-rm /scratch/global_tmp/${TMP_RND}_${target}/ -rf
-rm /scratch/global_tmp/${TMP_RND}_${target}_mate1/ -rf
-rm /scratch/global_tmp/${TMP_RND}_${target}_mate2/ -rf
-
+# rm /scratch/global_tmp/${TMP_RND}_${target}/ -rf
+# rm /scratch/global_tmp/${TMP_RND}_${target}_mate1/ -rf
+# rm /scratch/global_tmp/${TMP_RND}_${target}_mate2/ -rf
+rm ${TMP_RND}_${target}/ -rf
+rm ${TMP_RND}_${target}_mate1/ -rf
+rm ${TMP_RND}_${target}_mate2/ -rf

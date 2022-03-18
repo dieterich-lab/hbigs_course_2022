@@ -13,8 +13,6 @@
 #SBATCH -c 20
 #SBATCH --mem=20G
 #SBATCH -J "bowtie2 rRNA filtering"
-#SBATCH --mail-type=END,FAIL,TIME_LIMIT_80
-#SBATCH --mail-user=tobias.jakobi@med.uni-heidelberg.de
 
 # check if we have 5 arguments
 if [ ! $# == 5 ]; then

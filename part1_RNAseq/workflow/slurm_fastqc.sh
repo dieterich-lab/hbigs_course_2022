@@ -13,20 +13,18 @@
 #SBATCH --mem=1G
 #SBATCH -J "FastQC"
 #SBATCH -c 1
-#SBATCH --mail-type=END,FAIL,TIME_LIMIT_80
-#SBATCH --mail-user=tobias.jakobi@med.uni-heidelberg.de
-
 
 # we are good with 1GB, the manual says it allocates ~256MB per thread
 
 module load fastqc
 
-# check if we have 3 arguments
+# check if we have 2 arguments
 if [ ! $# == 2 ]; then
   echo $#
   echo "Usage: $0 [Read file] [output directory]"
   exit
 fi
 
-#fastqc $1 -o $2 -a /biosw/flexbar/Adapter.fa -d /scratch/
-fastqc $1 -o $2 -d /scratch/global_tmp/
+# fastqc $1 -o $2 -a /biosw/flexbar/Adapter.fa -d /scratch/
+# fastqc $1 -o $2 -d /scratch/global_tmp/
+fastqc $1 -o $2

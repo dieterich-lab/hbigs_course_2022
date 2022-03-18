@@ -10,10 +10,8 @@
 #SBATCH -c 15
 #SBATCH --mem=20G
 #SBATCH -J "flexbar paired"
-#SBATCH --mail-type=END,FAIL,TIME_LIMIT_80
-#SBATCH --mail-user=tobias.jakobi@med.uni-heidelberg.de
 
-# check if we have 3 arguments
+# check if we have 4 arguments
 if [ ! $# == 4 ]; then
   echo "Usage: $0 [Read 1 file] [Read 2 file] [target dir e.g. /tmp/] [R1 marker, e.g. _R1]"
   exit

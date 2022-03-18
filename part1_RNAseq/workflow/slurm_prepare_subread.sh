@@ -10,8 +10,6 @@
 #SBATCH -c 2 
 #SBATCH --mem=1G
 #SBATCH -J "prepare-subread"
-#SBATCH --mail-type=END,FAIL,TIME_LIMIT_80
-#SBATCH --mail-user=tobias.jakobi@med.uni-heidelberg.de
 
 if [ ! $# == 2 ]; then
   echo "Usage: $0 [STAR folder] [BAM folder] "

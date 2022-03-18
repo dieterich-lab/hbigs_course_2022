@@ -10,13 +10,15 @@
 #SBATCH -c 2
 #SBATCH --mem=10G
 #SBATCH -J "multiqc"
-#SBATCH --mail-type=END,FAIL,TIME_LIMIT_80
-#SBATCH --mail-user=tobias.jakobi@med.uni-heidelberg.de
 
+module load multiqc
 
-# check if we have 6 arguments
+export LC_ALL=C.UTF-8
+export LANG=C.UTF-8
+
+# check if we have 4 arguments
 if [ ! $# == 4 ]; then
-  echo "Usage: $0 [STAR] [FASTQC] [FLEXBAR] [BOWTIE]"
+  echo "Usage: $0 [STAR] [FLEXBAR] [BOWTIE] [FASTQC]"
   exit
 fi
 
