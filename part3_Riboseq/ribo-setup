@@ -6,6 +6,9 @@ COURSE=hbigs_course_2022
 # this is important that we use the right Python version!
 module load python3/3.6.13_deb10
 
+# NOTE: this setup is only valid for Rp-Bp v.2.0.0
+# It contains some hard coded fixes...
+
 # Do not modify below
 # -----------------------------------------------
 # Install packages in a fresh virtual environment
@@ -27,15 +30,26 @@ python3 -m venv $ENVLOC/${NAME^^}-ribo
 # activate the environment
 source $ENVLOC/${NAME^^}-ribo/bin/activate
 # upgrade pip and wheel
-pip3 install --upgrade pip setuptools wheel
+# until we have sorted the install, see e.g. https://github.com/pypa/pip/issues/8368
+# we should avoid upgrading pip...
+# pip3 install --upgrade pip setuptools wheel
+pip3 install --upgrade pip==19.3
+pip3 install --upgrade setuptools wheel
 
 # clone the git repository and install rpbp
 cd $PARENT
-# git clone https://github.com/dieterich-lab/rp-bp.git
+git clone https://github.com/dieterich-lab/rp-bp.git
 # clone latest tag for running the example
 # we're going to be in a detached HEAD, but we're not going to make any changes...
-git clone -b 2.0.0 https://github.com/dieterich-lab/rp-bp.git
+# git clone -b 2.0.0 https://github.com/dieterich-lab/rp-bp.git
 cd rp-bp
+
+# this temporary allows us to install rpbp
+# but the install is not clean!
+sed -i '2 i fastparquet==0.4.1' requirements.txt
+sed -i '3 i numba==0.53.1' requirements.txt
+sed -i '4 i llvmlite==0.36.0' requirements.txt
+
 pip3 --verbose install -r requirements.txt . 2>&1 | tee rpbp-install.log
 
 # also install slurm magic for jupyter notebook
