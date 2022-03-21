@@ -23,7 +23,10 @@ We will be using a subset of the data from [D.A. Rothenberg et al. A Proteomics 
 
 #### Hardware/software requirements
 
-You need a functional laptop with *e.g.* eduroam connection, and WireGuard installed (see [Setting Up WireGuard](https://github.com/dieterich-lab/hbigs_course_2022/wiki/Preparation-Workshop)). If you have difficulties to install the required software or to access our HPC cluster, you must come to the walk-in on 23.03.2022.
+You need a functional laptop with *e.g.* eduroam connection, and WireGuard installed (see [Setting Up WireGuard](https://github.com/dieterich-lab/hbigs_course_2022/wiki/Preparation-Workshop)). 
+
+> If you have difficulties to install the required software or to access our HPC cluster, you must 
+> come to the walk-in session on 23.03.2022.
 
 #### General requirements
 
@@ -41,18 +44,19 @@ their content. We bear no responsibility for the accuracy of their content.
 
 ### Schedule
 
-| Walk-in session | Topic | Instructor |
-:-----------------|:------|:----------|
+| Walk-in session<br>23.03.2022 | Topic | Instructor |
+:----------|:-----------------|:----------|
 | 16.00           | [Setting Up WireGuard](https://github.com/dieterich-lab/hbigs_course_2022/wiki/Preparation-Workshop)<br>[installing missing packages 1](part1_RNAseq/README.md#dependencies)<br>[installing missing packages 2](part4_Integration/README.md#dependencies)  | HW, EG, EB  |
 
-| Day 1 | Topic | Instructor |
-:----------|:----------|:----------|
+| Day 1<br>24.03.2022 | Topic | Instructor |
+:----------|:-----------------|:----------|
 | 9.00-12.30 | [From raw sequencing reads to differential expression](part1_RNAseq/README.md) | EG, EB |
 | 12.30-13.30 | Lunch |  |
-| 13.30-17.00 | Approaches for differential splicing analysis from RNA-Seq data | TBB |
+| 13.30-15.00 | [From raw sequencing reads to differential expression](part1_RNAseq/README.md) | EG, EB |
+| 15.00-17.00 | Approaches for differential splicing analysis from RNA-Seq data | TBB |
 
-| Day 2 | Topic | Instructor |
-:----------|:----------|:----------|
+| Day 2<br>25.03.2022 | Topic | Instructor |
+:----------|:-----------------|:----------|
 | 9.00-12.30 | [Ribo-seq data analysis and the Rp-Bp workflow](part3_Riboseq/README.md) | EB |
 | 12.30-13.30 | Lunch |  |
 | 13.30-17.00 | [Proteomics and Integrative Analysis](part4_Integration/README.md) | EG |
