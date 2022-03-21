@@ -72,6 +72,8 @@ Although all rules can be called at once, we will call them one by one, and expl
 4. Read mapping with  [**STAR**](https://github.com/alexdobin/STAR)
 5. Read-to-gene assignment (abundance estimation, or read counting) with [**subread/featurecount**](http://subread.sourceforge.net/)
 
+We will explore different aspects of this workflow using the following lessons: *(i)* [Quality assessment](lessons/quality_assessment.md), and *(ii)* [Alignment](lessons/alignment.md).
+
 
 ### Data
 
