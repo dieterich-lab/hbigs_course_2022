@@ -1,0 +1,16 @@
+fasta_reference:
+    /beegfs/biodb/genomes/homo_sapiens/GRCh38_96/GRCh38_96.fa
+    
+sample:
+    PBS_1:
+        - /pub/hbigs_course_2022/raw-data/downsampled/dSRR7451187_1.fastq.gz
+        - /pub/hbigs_course_2022/raw-data/downsampled/dSRR7451187_2.fastq.gz
+    PBS_2: 
+        - /pub/hbigs_course_2022/raw-data/downsampled/dSRR7451179_1.fastq.gz
+        - /pub/hbigs_course_2022/raw-data/downsampled/dSRR7451179_2.fastq.gz
+    EGF_1:
+        - /pub/hbigs_course_2022/raw-data/downsampled/dSRR7451182_1.fastq.gz
+        - /pub/hbigs_course_2022/raw-data/downsampled/dSRR7451182_2.fastq.gz
+    EGF_2:
+        - /pub/hbigs_course_2022/raw-data/downsampled/dSRR7451201_1.fastq.gz
+        - /pub/hbigs_course_2022/raw-data/downsampled/dSRR7451201_2.fastq.gz

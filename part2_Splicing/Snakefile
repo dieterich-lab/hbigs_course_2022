@@ -1,34 +1,35 @@
+"""
+module load salmon
+snakemake --jobs 10 --printshellcmds
+"""
+
+configfile: "config.yaml"
+
 rule all:
   input:
-    'salmon/SRR7451179__Rep_2__MP60-2__mRNA_Seq__PBS/quant.sf',
-    'salmon/SRR7451182__Rep_1__ME60-1__mRNA_Seq__EGF/quant.sf',
-    'salmon/SRR7451187__Rep_1__MP60-1__mRNA_Seq__PBS/quant.sf',
-    'salmon/SRR7451201__Rep_2__ME60-2__mRNA_Seq__EGF/quant.sf',
+    expand('salmon/{SAMPLE}/quant.sf', SAMPLE=config['sample'])
     
 rule salmon_index:
   input:
-    'Homo_sapiens.GRCh38.cdna.all.fa.gz'
+    config['fasta_reference']
   output:
     directory("salmon/salmon_index/")
   threads:
     10
   shell :
-    "salmon index -t {input} -i {output} -p {threads} 2> {log}"
+    "salmon index -t {input} -i {output} -p {threads}"
 
 rule salmon_quant:
   input:
-    r1 = "/pub/hbigs_course_2019/part_1/downsampled/raw_data/{sample}_R1.fastq.gz",
-    r2 = "/pub/hbigs_course_2019/part_1/downsampled/raw_data/{sample}_R2.fastq.gz",
-    index = "salmon/salmon_index/"
+    "salmon/salmon_index/",
+    lambda wc: config['sample'][wc.SAMPLE]
   output:
-    "salmon/{sample}/quant.sf"
+    "salmon/{SAMPLE}/quant.sf"
   threads:
     10
-  log:
-    "log/{sample}_salmons_quant.log"
   shell:
-    "salmon quant -p {threads} -i {input.index} "
+    "salmon quant -p {threads} -i {input[0]} "
     "--libType A "
-    "-1 <(gunzip -c {input.r1}) "
-    "-2 <(gunzip -c {input.r2}) "
-    "-o salmon/{wildcards.sample}/ &> {log}"
+    "-1 <(gunzip -c {input[1]}) "
+    "-2 <(gunzip -c {input[2]}) "
+    "-o salmon/{wildcards.SAMPLE}/"
