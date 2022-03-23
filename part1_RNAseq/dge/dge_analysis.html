@@ -196,7 +196,7 @@ library(openxlsx)</code></pre>
 </div>
 <div id="loading-of-the-data" class="section level3">
 <h3>Loading of the data</h3>
-<p>We load the generated <strong>subread_counts</strong> object, define the experimental conditions for each available sample and prepare the data in the <em>DGEObj</em> format.</p>
+<p>We load the generated <strong>subread_counts</strong> object, define the experimental conditions for each available sample and prepare the data in the <em>DGEObj</em> format which represents a flexible container to manage and annotate Differential Gene Expression (DGE) analysis results.</p>
 <pre class="r"><code>load(&quot;course.Rdata&quot;)
 
 groups &lt;- factor(c(&quot;PBS&quot;,&quot;EGF&quot;,&quot;PBS&quot;,&quot;EGF&quot;))
@@ -262,7 +262,7 @@ print(DGEObj)</code></pre>
 </div>
 <div id="experimental-design" class="section level3">
 <h3>Experimental Design</h3>
-<p>We make an experimental design matrix where we indicate the condition and replicate ID’s for each sample. We then prepare the needed <em>EGF_vs_PBS</em> contrast.</p>
+<p>We make an experimental design matrix where we indicate the condition and replicate ID’s for each sample. We then define the testing contrasts of our experimental design (<em>EGF_vs_PBS</em>). Our targeted <em>EGF_vs_PBS</em> contrast tests whether the average expression across all <em>EGF</em> groups is equal to the average expression across all <em>PBS</em> groups using <em>makeContrasts</em>.</p>
 <pre class="r"><code>design &lt;- model.matrix(~0+groups)
 colnames(design) &lt;- levels(groups)
 print(design)</code></pre>
@@ -385,13 +385,21 @@ dim(DGEObj)</code></pre>
 <div id="edger-analysis" class="section level3">
 <h3>edgeR Analysis</h3>
 <p>We calculate the normalization factor, estimate the dispersion, fit the linear model, and then summarize the results in an edgeR table format.</p>
-<pre class="r"><code>DGEObj &lt;- calcNormFactors(DGEObj) # recalc norm factors
+<pre class="r"><code># The filtered raw counts are then normalized with calcNormFactors according to 
+# the weighted trimmed mean of M-values (TMM) to eliminate composition biases 
+# between libraries.
+DGEObj &lt;- calcNormFactors(DGEObj) # recalc norm factors - TMM
 
-
+# With the normalized gene counts and design matrix we can now generate the 
+# negative binomial (NB) dispersion estimates using the estimateDisp function. 
+# The NB dispersion estimates reflect the overall biological variability under 
+# the Quasi-Likelihood framework in edgeR.
 DGEObj &lt;- estimateDisp(DGEObj, design) # estimate dispersion
 DGEObj$common.dispersion</code></pre>
 <pre><code>## [1] 0.001686058</code></pre>
-<pre class="r"><code>fit &lt;- glmFit(DGEObj, design) # fit generalized linear model
+<pre class="r"><code># A generalized linear model (GLM) of the Negative Binomial family is used to 
+# fit the data. 
+fit &lt;- glmFit(DGEObj, design) # fit generalized linear model
 lrt &lt;- glmLRT(fit, contrast = contrasts[, &quot;EGF_vs_PBS&quot;])
 
 # main data table of edgeR results
