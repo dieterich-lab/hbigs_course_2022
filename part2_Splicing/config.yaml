@@ -1,0 +1,16 @@
+fasta_reference:
+    /pub/hbigs_course_2022/raw-data/Homo_sapiens.GRCh38.cdna.all.fa
+    
+sample:
+    PBS_1:
+        - /pub/hbigs_course_2022/raw-data/downsampled/dSRR7451187_1.fastq.gz
+        - /pub/hbigs_course_2022/raw-data/downsampled/dSRR7451187_2.fastq.gz
+    PBS_2: 
+        - /pub/hbigs_course_2022/raw-data/downsampled/dSRR7451179_1.fastq.gz
+        - /pub/hbigs_course_2022/raw-data/downsampled/dSRR7451179_2.fastq.gz
+    EGF_1:
+        - /pub/hbigs_course_2022/raw-data/downsampled/dSRR7451182_1.fastq.gz
+        - /pub/hbigs_course_2022/raw-data/downsampled/dSRR7451182_2.fastq.gz
+    EGF_2:
+        - /pub/hbigs_course_2022/raw-data/downsampled/dSRR7451201_1.fastq.gz
+        - /pub/hbigs_course_2022/raw-data/downsampled/dSRR7451201_2.fastq.gz

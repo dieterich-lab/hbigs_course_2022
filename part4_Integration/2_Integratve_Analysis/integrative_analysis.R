@@ -19,6 +19,13 @@ library("GSA")
 library("VennDiagram")
 library("RColorBrewer")
 library("ggVennDiagram")
+library("pheatmap")
+library("tidyverse")
+library("factoextra")
+library("gridExtra")
+library("cluster")
+library("NNLM")
+library("bayesCC")
 
 # Differential Gene Expression Data
 load(file = "../Data/ttop_dge.RData")
@@ -72,46 +79,30 @@ cim(cor(t(proc_gene_data),
         t(proc_prot_data)), 
     xlab = "proteins", ylab = "genes")
 
-# Filter for Common Genes
-common_genes <- intersect(x = ttop_dge$external_gene_name, y = ttop_prot$Gene)
-omic1 <- ttop_dge[which(ttop_dge$external_gene_name%in%common_genes), ]
-omic1 <- as.matrix(omic1$logFC[order(omic1$external_gene_name)])
-omic2 <- ttop_prot[which(ttop_prot$Gene%in%common_genes), ]
-omic2 <- as.matrix(omic2$EGF_60_vs_PBS_60_diff[order(omic2$Gene)])
-rownames(omic1) <- common_genes[order(common_genes)]
-rownames(omic2) <- common_genes[order(common_genes)]
+# Concatenated Clustering
+# Concatenate the data and cluster the samples
+conc_data <- rbind(scale(x = proc_gene_data, center = FALSE),
+                   scale(x = proc_prot_data, center = FALSE))
+rownames(conc_data) <- c(paste0(rownames(proc_gene_data), "_Gene"), 
+                         paste0(rownames(proc_prot_data), "_Prot"))
+dim(conc_data)
 
-omics.list = list(t(omic1), t(omic2))
+pheatmap(mat = conc_data, cluster_cols = TRUE, cluster_rows = TRUE)
 
-# Supervised Clustering - 2 Clusters
-clustering = nemo.clustering(omics.list = omics.list, num.clusters = 2)
+# Clustering of Clusters
+# Create Omics List NEMO object and do the clustering
+omic1 <- scale(x = proc_gene_data, center = FALSE)
+omic2 <- scale(x = proc_prot_data, center = FALSE)
 
-data <- cbind(omic1, omic2, as.matrix(clustering))
-colnames(data) <- c("diff_genes", "diff_prot", "cluster")
-data <- as.data.frame(data)
-data$cluster <- as.factor(data$cluster)
-head(data)
+omics.list = list(omic1, omic2)
 
-p <- ggplot(data, aes(x=diff_genes, y=diff_prot, color=cluster, shape=cluster)) +
-  geom_point() + 
-  theme_classic() +
-  ggtitle("Scatter Plot and Clustering")
-p+scale_color_brewer(palette="Dark2")
+clustering = nemo.clustering(omics.list = omics.list, num.clusters = 2, 
+                             num.neighbors = 2) # supervised
+print(clustering)
 
-# Unsupervised Clustering
-clustering = nemo.clustering(omics.list = omics.list, num.clusters = NA)
-
-data <- cbind(omic1, omic2, as.matrix(clustering))
-colnames(data) <- c("diff_genes", "diff_prot", "cluster")
-data <- as.data.frame(data)
-data$cluster <- as.factor(data$cluster)
-head(data)
-
-p <- ggplot(data, aes(x=diff_genes, y=diff_prot, color=cluster, shape=cluster)) +
-  geom_point() + 
-  theme_classic() +
-  ggtitle("Scatter Plot and Clustering")
-p+scale_color_brewer(palette="Dark2")
+clustering = nemo.clustering(omics.list = omics.list, num.clusters = NA, 
+                             num.neighbors = 2) # unsupervised
+print(clustering)
 
 # Loading the Pathway Sets 
 # MSigDB: http://www.gsea-msigdb.org/gsea/msigdb/collections.jsp#C2
