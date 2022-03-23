@@ -35,22 +35,27 @@ Before running the scripts, please make sure to have installed the following R-P
 **13.** [VennDiagram](https://cran.r-project.org/web/packages/VennDiagram/index.html)
 **14.** [RColorBrewer](https://rdrr.io/cran/RColorBrewer/)
 **15.** [ggVennDiagram](https://cran.r-project.org/web/packages/ggVennDiagram/index.html#:~:text=ggVennDiagram%3A%20A%20'ggplot2'%20Implement,geometry%20dataset%20and%20'ggplot2'.)
+**16.** [pheatmap](https://cran.r-project.org/web/packages/pheatmap/index.html)
+**17.** [tidyverse](https://cran.r-project.org/web/packages/tidyverse/index.html)
+**18.** [factoextra](https://cran.r-project.org/web/packages/factoextra/index.html)
+**19.** [gridExtra](https://cran.r-project.org/web/packages/gridExtra/index.html)
+**20.** [cluster](https://cran.r-project.org/web/packages/cluster/index.html)
 
 
 #### Bioconductor
-**16.** [DEP](https://bioconductor.org/packages/release/bioc/html/DEP.html)
-**17.** [vsn](https://www.bioconductor.org/packages/release/bioc/html/vsn.html)
-**18.** [limma](https://bioconductor.org/packages/release/bioc/html/limma.html)
-**19.** [BioNet](https://www.bioconductor.org/packages/release/bioc/html/BioNet.html)
-**20.** [OmnipathR](https://bioconductor.org/packages/release/bioc/html/OmnipathR.html)
-**21.** [mixOmics](https://bioconductor.org/packages/release/bioc/html/mixOmics.html)
-**22.** [fgsea](http://bioconductor.org/packages/release/bioc/html/fgsea.html)
+**21.** [DEP](https://bioconductor.org/packages/release/bioc/html/DEP.html)
+**22.** [vsn](https://www.bioconductor.org/packages/release/bioc/html/vsn.html)
+**23.** [limma](https://bioconductor.org/packages/release/bioc/html/limma.html)
+**24.** [BioNet](https://www.bioconductor.org/packages/release/bioc/html/BioNet.html)
+**25.** [OmnipathR](https://bioconductor.org/packages/release/bioc/html/OmnipathR.html)
+**26.** [mixOmics](https://bioconductor.org/packages/release/bioc/html/mixOmics.html)
+**27.** [fgsea](http://bioconductor.org/packages/release/bioc/html/fgsea.html)
 
 
 #### GitHub
-**23.** [DEP](https://github.com/arnesmits/DEP)
-**24.** [OmnipathR](https://github.com/saezlab/OmnipathR)
-**25.** [NEMO](https://github.com/Shamir-Lab/NEMO)
+**28.** [DEP](https://github.com/arnesmits/DEP)
+**29.** [OmnipathR](https://github.com/saezlab/OmnipathR)
+**30.** [NEMO](https://github.com/Shamir-Lab/NEMO)
 
 
 To start a R-Console, you first need to make sure the R module is loaded
@@ -67,7 +72,9 @@ R
 You can verify missing packages by running the following in the R-Console:
 
 ```python
-package_list <- c("readr", "dplyr", "tidyr", "ggplot2", "ggrepel", "knitr", "tidyverse", "igraph", "ggpubr", "M2SMF", "SNFtool", "GSA", "VennDiagram", "RColorBrewer", "ggVennDiagram", "DEP", "vsn", "limma", "BioNet", "OmnipathR", "mixOmics", "fgsea", "NEMO")
+package_list <- c("readr", "dplyr", "tidyr", "ggplot2", "ggrepel", "knitr", "tidyverse", "igraph", "ggpubr", "M2SMF", "SNFtool", "GSA", "VennDiagram", "RColorBrewer", "ggVennDiagram", "pheatmap", "tidyverse", "factoextra", 
+"gridExtra", "cluster", "DEP", "vsn", "limma", "BioNet", "OmnipathR", 
+"mixOmics", "fgsea", "NEMO")
 print(setdiff(package_list, installed.packages()[, 1]))
 ```
 

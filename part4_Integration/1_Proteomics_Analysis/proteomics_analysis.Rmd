@@ -1,8 +1,8 @@
 ---
 title: "Analysis and Exploration of Proteomics Data"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -72,8 +72,10 @@ print(labels)
 # We setup the experimental design matrix
 experimental_design <- matrix(data = , nrow = length(labels), ncol = 3)
 experimental_design[, 1] <- labels
-experimental_design[, 2] <- sapply(strsplit(x = labels, split = "_Rep", fixed = TRUE), "[", 1)
-experimental_design[, 3] <- sapply(strsplit(x = labels, split = "_", fixed = TRUE), "[", 3)
+experimental_design[, 2] <- sapply(strsplit(x = labels, split = "_Rep", fixed = TRUE), 
+                                   "[", 1)
+experimental_design[, 3] <- sapply(strsplit(x = labels, split = "_", fixed = TRUE), 
+                                   "[", 3)
 colnames(experimental_design) <- c("label", "condition", "replicate")
 experimental_design <- as.data.frame(experimental_design)
 print(experimental_design)
@@ -95,7 +97,8 @@ data_se
 We **filter** the proteomics dataset based on missing values. The dataset is filtered for proteins that have a maximum of 2 missing values in at least one condition.
 
 ```{r chunk6, echo=TRUE, eval=TRUE}
-# Filter for proteins that are identified in 2 out of 4 replicates of at least one condition
+# Filter for proteins that are identified in 2 out of 4 replicates of at least 
+# one condition
 data_filt <- filter_missval(data_se, thr = 2)
 data_filt
 ```
@@ -112,15 +115,21 @@ plot_normalization(data_filt, data_norm)
 ```
 
 #### Imputation
-There are still many missing values in the data. We perform **imputation** in order to impute missing values in the data-set.
+There are still many missing values in the data. We perform **imputation** in order to impute missing values in the data-set and then visualize the effects which imputation has on the distribution of the data.
 
-```{r chunk8, echo=TRUE, eval=TRUE, fig.height = 10, fig.width = 10, warning=FALSE, comment=FALSE, message=FALSE}
+```{r chunk8, echo=TRUE, eval=TRUE, fig.height = 5, fig.width = 7, warning=FALSE, comment=FALSE, message=FALSE}
 # Percentage of missing data
-perc <- length(which(is.na(data_norm@assays@data@listData[[1]])))/(dim(data_norm@assays@data@listData[[1]])[1]*dim(data_norm@assays@data@listData[[1]])[2])
+perc <- length(which(is.na(data_norm@assays@data@listData[[1]])))/
+  (dim(data_norm@assays@data@listData[[1]])[1]*
+     dim(data_norm@assays@data@listData[[1]])[2])
 print(paste0(round(x = 100*perc, digits = 2), "%"))
 
-# Impute missing data using random draws from a Gaussian distribution centered around a minimal value (for MNAR)
+# Impute missing data using random draws from a Gaussian distribution centered 
+# around a minimal value (for MNAR)
 data_imp <- impute(data_norm, fun = "MinProb", q = 0.01)
+
+# We can then visualize the effect of imputation on the data
+plot_imputation(data_norm, data_imp)
 ```
 
 #### Interpretation
@@ -250,14 +259,18 @@ ttop <- as.data.frame(data_diff_manual@elementMetadata)
 ttop <- ttop[, c(1:4, 10:12)]
 head(ttop)
 
-ttop$expression = ifelse(ttop$EGF_60_vs_PBS_60_p.val < 0.05 & abs(ttop$EGF_60_vs_PBS_60_diff) >= 1, 
+ttop$expression = ifelse(ttop$EGF_60_vs_PBS_60_p.val < 0.05 & 
+                           abs(ttop$EGF_60_vs_PBS_60_diff) >= 1, 
                      ifelse(ttop$EGF_60_vs_PBS_60_diff> 1 ,'Up','Down'),
                      'Stable')
 
 ttop$label <- NA
-ttop$label[which(ttop$expression!="Stable")] <- ttop$Gene[which(ttop$expression!="Stable")]
+ttop$label[which(ttop$expression!="Stable")] <- 
+  ttop$Gene[which(ttop$expression!="Stable")]
 
-p <- ggplot(data=ttop, aes(x=EGF_60_vs_PBS_60_diff, y=-log10(EGF_60_vs_PBS_60_p.val), col=expression, label=label)) +
+p <- ggplot(data=ttop, aes(x=EGF_60_vs_PBS_60_diff, 
+                           y=-log10(EGF_60_vs_PBS_60_p.val), 
+                           col=expression, label=label)) +
   geom_point() + 
   theme_minimal() +
   geom_text_repel() +

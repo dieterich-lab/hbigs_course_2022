@@ -1,5 +1,3 @@
-#!/usr/bin/env Rscript
-
 ### imports
 
 library(edgeR)
@@ -12,38 +10,32 @@ library(tools)
 library(ggplot2)
 library(dplyr)
 library(Glimma)
-
-# options(echo=TRUE) # if you want see commands in output file
-args <- commandArgs(trailingOnly = TRUE)
-
-contrast <- args[1]
-global_pval <- as.numeric(args[2])
-global_fdr <- as.numeric(args[3])
-log_threshold <- as.numeric(args[4])
-threshold <- as.numeric(args[5])
-focus <- args[6]
-
-
-## fix "not find zip" error from openxlsx
-Sys.setenv(R_ZIPCMD = "/usr/bin/zip")
-require(openxlsx)
-
-# visible R code
-options(echo = TRUE)
-
-# set base output directory
-baseDir <- paste("./edgeR_p", global_pval, "__FDR_", global_fdr, "__thresh_", threshold, "/", sep = "")
-dir.create(baseDir, showWarnings = TRUE, recursive = TRUE, mode = "0755")
-
-
+library(openxlsx)
 
 load("course.Rdata")
 
+groups <- factor(c("PBS","EGF","PBS","EGF"))
 
-############
-source(file = paste(contrast, ".R", sep = ""))
+label <- c("PBS2", "EGF1", "PBS1", "EGF2")
+
+print(colnames(subread_counts$counts))
+print(colnames(subread_counts$counts))
+
+DGEObj <- DGEList(group=groups, counts=subread_counts$counts, genes=subread_counts$annotation[,c("GeneID","Length")])
+
+print(DGEObj)
+
+design <- model.matrix(~0+groups)
+colnames(design) <- levels(groups)
+print(design)
+
+contrasts <- makeContrasts(
+  EGF_vs_PBS = EGF - PBS,
+  levels=design
+)
+counts <- DGEObj$counts
+
 ###########
-
 head(DGEObj$samples)
 
 rownames(DGEObj$samples) <- gsub("\\.", "_", rownames(DGEObj$samples))
@@ -85,46 +77,21 @@ DGEObj <- calcNormFactors(DGEObj) # recalc norm factors
 DGEObj <- estimateDisp(DGEObj, design) # estimate dispersion
 DGEObj$common.dispersion
 
-# MDS plot
-pdf(paste(baseDir, "plot_mds.pdf", sep = ""), title = "MA plot")
-col.status <- c("blue", "red", "green", "cyan", "black")[DGEObj$samples$group]
-plotMDS(DGEObj, col = col.status)
-
-dev.off()
-
 fit <- glmFit(DGEObj, design) # fit generalized linear model
-lrt <- glmLRT(fit, contrast = contrasts[, contrast])
+lrt <- glmLRT(fit, contrast = contrasts[, "EGF_vs_PBS"])
 
-isDE <- as.logical(decideTestsDGE(lrt, p.value = global_pval))
-DEnames <- rownames(DGEObj)[isDE]
-summary(isDE)
+# isDE <- as.logical(decideTestsDGE(lrt, p.value = 0))
+# DEnames <- rownames(DGEObj)[isDE]
+# summary(isDE)
 
 # main data table of edgeR results
 edgerTable <- topTags(lrt, n = nrow(DGEObj))$table
-
-
-
 
 y <- cpm(DGEObj, log = TRUE, prior.count = 1)
 lcpm <- cpm(DGEObj, log = TRUE)
 
 
-glMDSPlot(lcpm, labels = paste(groups, sep = "_"), groups = DGEObj$samples,
-  launch = FALSE, path = baseDir)
-
-
 ####################################################################################
-pdf(paste(baseDir, contrast, ".pdf", sep = ""), title = paste(contrast, " results"))
-plotSmear(lrt, xlab = "Log Concentration" , ylab = "Log Fold-Change", smooth.scatter = FALSE, lowess = FALSE, de.tags = DEnames, pch = 19, cex = 0.4, main = paste(contrast, " expression", sep = ""))
-abline(h = c((- 1) * threshold, threshold), col = "blue")
-
-dev.off()
-
-
-
-edgerResults <- edgerTable[edgerTable$PValue <= global_pval ,]
-
-
 ## done excel export
 ensembl <- useMart("ensembl", dataset = "hsapiens_gene_ensembl", host="ensembl.org")
 
@@ -145,35 +112,5 @@ gene_names <- data.frame(lrt$table$gene)
 
 edgerTable <- edgerTable[c("external_gene_name", "GeneID" , "Length" , "logFC", "logCPM", "PValue", "FDR", "GO", "description")]
 
-
-edgerResults <- edgerTable[edgerTable$PValue < global_pval,]
-edgerFiltered <- edgerResults[edgerResults$FDR <= global_fdr & abs(edgerResults$logFC) > log_threshold ,]
-edgerSortedByFC <- edgerResults[order(edgerFiltered$logFC),]
-edgerSortedByFCselection <- edgerSortedByFC[edgerSortedByFC$logFC <= (- 1) * log_threshold | edgerSortedByFC$logFC >= log_threshold,]
-
-glMDPlot(lrt, anno=gene_names, status = decideTestsDGE(lrt, p.value = global_pval),
-  counts = DGEObj, groups = groups, transform = TRUE, launch = FALSE, path = baseDir,
-  side.main = "Symbol", main = "Gene expression")
-
-
-## create excel workbook and file
-wb <- createWorkbook()
-
-addWorksheet(wb, sheetName = paste("p<", global_pval, sep = ""));
-writeDataTable(wb, sheet = 1, x = edgerResults, rowNames = FALSE);
-
-addWorksheet(wb, sheetName = paste("p<", global_pval, ", FDR<", global_fdr, sep = ""));
-writeDataTable(wb, sheet = 2, x = edgerFiltered, rowNames = FALSE);
-
-addWorksheet(wb, sheetName = paste("p<", global_pval, ", FDR<", global_fdr, ", by FC", sep = ""));
-writeDataTable(wb, sheet = 3, x = edgerSortedByFC, rowNames = FALSE);
-
-addWorksheet(wb, sheetName = paste("p<", global_pval, ", FDR< ", global_fdr, ", logFC>", log_threshold, sep = ""));
-writeDataTable(wb, sheet = 4, x = edgerSortedByFCselection, rowNames = FALSE);
-
-saveWorkbook(wb, paste(output = baseDir, contrast, "_edger.xlsx", sep = ""), overwrite = TRUE)
-
-
-
-
-
+ttop_dge <- edgerTable
+head(ttop_dge)

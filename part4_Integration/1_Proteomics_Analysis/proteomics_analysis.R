@@ -62,6 +62,9 @@ print(paste0(round(x = 100*perc, digits = 2), "%"))
 # Impute missing data using random draws from a Gaussian distribution centered around a minimal value (for MNAR)
 data_imp <- impute(data_norm, fun = "MinProb", q = 0.01)
 
+# We can then visualize the effect of imputation on the data
+plot_imputation(data_norm, data_imp)
+
 matrix_data <- data_imp@assays@data@listData[[1]]
 
 # PCA plot based on condition
