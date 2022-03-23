@@ -72,7 +72,9 @@ R
 You can verify missing packages by running the following in the R-Console:
 
 ```python
-package_list <- c("readr", "dplyr", "tidyr", "ggplot2", "ggrepel", "knitr", "tidyverse", "igraph", "ggpubr", "M2SMF", "SNFtool", "GSA", "VennDiagram", "RColorBrewer", "ggVennDiagram", "pheatmap", "tidyverse", "factoextra", 
+package_list <- c("readr", "dplyr", "tidyr", "ggplot2", "ggrepel", "knitr", 
+"tidyverse", "igraph", "ggpubr", "M2SMF", "SNFtool", "GSA", "VennDiagram", 
+"RColorBrewer", "ggVennDiagram", "pheatmap", "tidyverse", "factoextra", 
 "gridExtra", "cluster", "DEP", "vsn", "limma", "BioNet", "OmnipathR", 
 "mixOmics", "fgsea", "NEMO")
 print(setdiff(package_list, installed.packages()[, 1]))
