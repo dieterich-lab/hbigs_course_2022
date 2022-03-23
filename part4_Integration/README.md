@@ -72,11 +72,7 @@ R
 You can verify missing packages by running the following in the R-Console:
 
 ```python
-package_list <- c("readr", "dplyr", "tidyr", "ggplot2", "ggrepel", "knitr", 
-"tidyverse", "igraph", "ggpubr", "M2SMF", "SNFtool", "GSA", "VennDiagram", 
-"RColorBrewer", "ggVennDiagram", "pheatmap", "tidyverse", "factoextra", 
-"gridExtra", "cluster", "DEP", "vsn", "limma", "BioNet", "OmnipathR", 
-"mixOmics", "fgsea", "NEMO")
+package_list <- c("readr", "dplyr", "tidyr", "ggplot2", "ggrepel", "knitr", "tidyverse", "igraph", "ggpubr", "M2SMF", "SNFtool", "GSA", "VennDiagram", "RColorBrewer", "ggVennDiagram", "pheatmap", "tidyverse", "factoextra", "gridExtra", "cluster", "DEP", "vsn", "limma", "BioNet", "OmnipathR", "mixOmics", "fgsea", "NEMO")
 print(setdiff(package_list, installed.packages()[, 1]))
 ```
 
@@ -85,7 +81,9 @@ You can install the missing packages by following the instructions below:
 > Missing **CRAN** packages can be installed by simply running:
 
 ```python
-install.packages("PackageName", dependencies = TRUE)
+cran_packages <- c("readr", "dplyr", "tidyr", "ggplot2", "ggrepel", "knitr", "tidyverse", "igraph", "ggpubr", "M2SMF", "SNFtool", "GSA", "VennDiagram", "RColorBrewer", "ggVennDiagram", "pheatmap", "tidyverse", "factoextra", "gridExtra", "cluster")
+diff_packages <- setdiff(cran_packages, installed.packages()[, 1])
+install.packages(diff_packages, dependencies = TRUE)
 ```
 
 > Missing **GitHub** packages can be installed by simply running:
