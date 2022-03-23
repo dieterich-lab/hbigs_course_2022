@@ -40,22 +40,28 @@ Before running the scripts, please make sure to have installed the following R-P
 **18.** [factoextra](https://cran.r-project.org/web/packages/factoextra/index.html)
 **19.** [gridExtra](https://cran.r-project.org/web/packages/gridExtra/index.html)
 **20.** [cluster](https://cran.r-project.org/web/packages/cluster/index.html)
+**21.** [lattice](https://cran.r-project.org/web/packages/lattice/index.html)
+**22.** [gplots](https://cran.r-project.org/web/packages/gplots/index.html)
+**23.** [openxlsx](https://cran.r-project.org/web/packages/openxlsx/index.html)
+**24.** [ggplot2](https://cran.r-project.org/web/packages/ggplot2/index.html)
+**25.** [devtools](https://cran.r-project.org/web/packages/devtools/index.html)
 
 
 #### Bioconductor
-**21.** [DEP](https://bioconductor.org/packages/release/bioc/html/DEP.html)
-**22.** [vsn](https://www.bioconductor.org/packages/release/bioc/html/vsn.html)
-**23.** [limma](https://bioconductor.org/packages/release/bioc/html/limma.html)
-**24.** [BioNet](https://www.bioconductor.org/packages/release/bioc/html/BioNet.html)
-**25.** [OmnipathR](https://bioconductor.org/packages/release/bioc/html/OmnipathR.html)
-**26.** [mixOmics](https://bioconductor.org/packages/release/bioc/html/mixOmics.html)
-**27.** [fgsea](http://bioconductor.org/packages/release/bioc/html/fgsea.html)
+**26.** [DEP](https://bioconductor.org/packages/release/bioc/html/DEP.html)
+**27.** [vsn](https://www.bioconductor.org/packages/release/bioc/html/vsn.html)
+**28.** [limma](https://bioconductor.org/packages/release/bioc/html/limma.html)
+**29.** [BioNet](https://www.bioconductor.org/packages/release/bioc/html/BioNet.html)
+**30.** [mixOmics](https://bioconductor.org/packages/release/bioc/html/mixOmics.html)
+**31.** [fgsea](http://bioconductor.org/packages/release/bioc/html/fgsea.html)
+**32.** [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html)
+**33.** [biomaRt](https://bioconductor.org/packages/release/bioc/html/biomaRt.html)
+**34.** [Glimma](https://bioconductor.org/packages/release/bioc/html/Glimma.html)
 
 
 #### GitHub
-**28.** [DEP](https://github.com/arnesmits/DEP)
-**29.** [OmnipathR](https://github.com/saezlab/OmnipathR)
-**30.** [NEMO](https://github.com/Shamir-Lab/NEMO)
+**35.** [OmnipathR](https://github.com/saezlab/OmnipathR)
+**36.** [NEMO](https://github.com/Shamir-Lab/NEMO)
 
 
 To start a R-Console, you first need to make sure the R module is loaded
@@ -81,7 +87,7 @@ You can install the missing packages by following the instructions below:
 > Missing **CRAN** packages can be installed by simply running:
 
 ```python
-cran_packages <- c("readr", "dplyr", "tidyr", "ggplot2", "ggrepel", "knitr", "tidyverse", "igraph", "ggpubr", "M2SMF", "SNFtool", "GSA", "VennDiagram", "RColorBrewer", "ggVennDiagram", "pheatmap", "tidyverse", "factoextra", "gridExtra", "cluster")
+cran_packages <- c("readr", "dplyr", "tidyr", "ggplot2", "ggrepel", "knitr", "tidyverse", "igraph", "ggpubr", "M2SMF", "SNFtool", "GSA", "VennDiagram", "RColorBrewer", "ggVennDiagram", "pheatmap", "tidyverse", "factoextra", "gridExtra", "cluster", "lattice", "gplots", "openxlsx", "ggplot2", "devtools")
 diff_packages <- setdiff(cran_packages, installed.packages()[, 1])
 install.packages(diff_packages, dependencies = TRUE)
 ```
@@ -90,14 +96,24 @@ install.packages(diff_packages, dependencies = TRUE)
 
 ```python
 require(devtools)
-install_github('DeveloperName/PackageName')
+
+git_packages <- c("saezlab/OmnipathR", "Shamir-Lab/NEMO/NEMO")
+
+install_github(git_packages)
+
 ```
 
 > Missing **Bioconductor** packages can be installed by following the instructions provided on the Bioconductor web-pages dedicated to each of the packages or by running:
 
 ```python
+
+bioc_packages <- c("DEP", "vsn", "limma", "BioNet", "mixOmics", "fgsea", "edgeR", "biomaRt", "Glimma")
+
+diff_packages <- setdiff(bioc_packages, installed.packages()[, 1])
+
 if (!require("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 
-BiocManager::install("PackageName")
+BiocManager::install(diff_packages, update = TRUE, ask = FALSE)
+
 ```
