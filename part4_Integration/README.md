@@ -57,10 +57,10 @@ Before running the scripts, please make sure to have installed the following R-P
 **32.** [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html)
 **33.** [biomaRt](https://bioconductor.org/packages/release/bioc/html/biomaRt.html)
 **34.** [Glimma](https://bioconductor.org/packages/release/bioc/html/Glimma.html)
+**35.** [OmnipathR](https://bioconductor.org/packages/release/bioc/html/OmnipathR.html)
 
 
 #### GitHub
-**35.** [OmnipathR](https://github.com/saezlab/OmnipathR)
 **36.** [NEMO](https://github.com/Shamir-Lab/NEMO)
 
 
@@ -97,7 +97,7 @@ install.packages(diff_packages, dependencies = TRUE)
 ```python
 require(devtools)
 
-git_packages <- c("saezlab/OmnipathR", "Shamir-Lab/NEMO/NEMO")
+git_packages <- c("Shamir-Lab/NEMO/NEMO")
 
 install_github(git_packages)
 
@@ -107,7 +107,7 @@ install_github(git_packages)
 
 ```python
 
-bioc_packages <- c("DEP", "vsn", "limma", "BioNet", "mixOmics", "fgsea", "edgeR", "biomaRt", "Glimma")
+bioc_packages <- c("DEP", "vsn", "limma", "BioNet", "mixOmics", "fgsea", "edgeR", "biomaRt", "Glimma", "OmnipathR")
 
 diff_packages <- setdiff(bioc_packages, installed.packages()[, 1])
 
