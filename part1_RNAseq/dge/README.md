@@ -11,7 +11,7 @@ For running the analysis, the participiants need to do the following:
 * Go to [https://r.dieterichlab.org:49200/](https://r.dieterichlab.org:49200/)
 * Add the Log-in credentials (i.e. **Username:** coursexx and **Password:** coursexx)
 * Set the working directory to: ```setwd("/beegfs/pub/hbigs_course_2022/part1_RNAseq/dge/")```
-* Add the libPath: ```.libPaths <- .libPaths( c( .libPaths(), "/biosw/....") )```
+* Add the libPath: ```.libPaths <- .libPaths( c( .libPaths(), "/biosw/hbigs_course_2022_eg/1.0.0/rlibs") )```
 * Check if the added libPath is present in the list: ```.libPaths()```
 * Open *dge_analysis.R* script.
 
