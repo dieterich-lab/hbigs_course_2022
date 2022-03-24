@@ -133,9 +133,6 @@ lrt <- glmLRT(fit, contrast = contrasts[, "EGF_vs_PBS"])
 # main data table of edgeR results
 edgerTable <- topTags(lrt, n = nrow(DGEObj))$table
 
-y <- cpm(DGEObj, log = TRUE, prior.count = 1)
-lcpm <- cpm(DGEObj, log = TRUE)
-
 ```
 
 ### Mapping

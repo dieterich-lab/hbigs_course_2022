@@ -117,3 +117,17 @@ if (!require("BiocManager", quietly = TRUE))
 BiocManager::install(diff_packages, update = TRUE, ask = FALSE)
 
 ```
+
+## Prerequisites
+For running the analysis, the participiants need to do the following:
+
+* Go to [https://r.dieterichlab.org:49200/](https://r.dieterichlab.org:49200/)
+* Add the Log-in credentials (i.e. **Username:** coursexx and **Password:** coursexx)
+* Set the working directory to: ```setwd("/home/enio/Documents/GitHub/hbigs_course_2022/part4_Integration/")```
+* Check if the needed libPath is present in the list: ```.libPaths()```. **If not, then:**
+* Add the libPath: ```.libPaths <- .libPaths( c( .libPaths(), "/biosw/....") )```
+* Check if the added libPath is present in the list: ```.libPaths()```
+* For the *Proteomic Analysis* part go to ```setwd("/home/enio/Documents/GitHub/hbigs_course_2022/part4_Integration/1_Proteomics_Analysis")``` and open the *proteomics_analysis.R* script.
+* For the *Integrative Analysis* part go to ```setwd("/home/enio/Documents/GitHub/hbigs_course_2022/part4_Integration/2_Integratve_Analysis")``` and open the *integrative_analysis.R* script.
+
+From here on we continue with the analysis workflow.

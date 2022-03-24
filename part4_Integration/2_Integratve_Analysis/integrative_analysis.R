@@ -24,8 +24,6 @@ library("tidyverse")
 library("factoextra")
 library("gridExtra")
 library("cluster")
-library("NNLM")
-library("bayesCC")
 
 # Differential Gene Expression Data
 load(file = "../Data/ttop_dge.RData")
@@ -42,13 +40,6 @@ head(proc_gene_data)
 # Processed Protein Abundance Data across EGF and PBS samples at time-point 60min
 load(file = "../Data/proc_prot_data.RData")
 head(proc_prot_data)
-
-# # Order by FDR and filter duplicates
-# ttop_dge <- ttop_dge[order(ttop_dge$FDR, decreasing = FALSE), ]
-# ttop_prot <- ttop_prot[order(ttop_prot$EGF_60_vs_PBS_60_p.adj, decreasing = FALSE), ]
-# 
-# ttop_dge <- ttop_dge[-which(duplicated(ttop_dge$external_gene_name)), ]
-# ttop_prot <- ttop_prot[-which(duplicated(ttop_prot$Gene)), ]
 
 # We find common Genes and and filter each data
 common_genes <- intersect(x = ttop_dge$external_gene_name, y = ttop_prot$Gene)

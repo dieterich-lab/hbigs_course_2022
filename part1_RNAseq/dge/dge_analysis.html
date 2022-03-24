@@ -403,10 +403,7 @@ fit &lt;- glmFit(DGEObj, design) # fit generalized linear model
 lrt &lt;- glmLRT(fit, contrast = contrasts[, &quot;EGF_vs_PBS&quot;])
 
 # main data table of edgeR results
-edgerTable &lt;- topTags(lrt, n = nrow(DGEObj))$table
-
-y &lt;- cpm(DGEObj, log = TRUE, prior.count = 1)
-lcpm &lt;- cpm(DGEObj, log = TRUE)</code></pre>
+edgerTable &lt;- topTags(lrt, n = nrow(DGEObj))$table</code></pre>
 </div>
 <div id="mapping" class="section level3">
 <h3>Mapping</h3>

@@ -6,11 +6,9 @@ library(biomaRt)
 library(gplots)
 library(gridExtra)
 library(openxlsx)
-library(tools)
 library(ggplot2)
 library(dplyr)
 library(Glimma)
-library(openxlsx)
 
 load("course.Rdata")
 
@@ -80,16 +78,8 @@ DGEObj$common.dispersion
 fit <- glmFit(DGEObj, design) # fit generalized linear model
 lrt <- glmLRT(fit, contrast = contrasts[, "EGF_vs_PBS"])
 
-# isDE <- as.logical(decideTestsDGE(lrt, p.value = 0))
-# DEnames <- rownames(DGEObj)[isDE]
-# summary(isDE)
-
 # main data table of edgeR results
 edgerTable <- topTags(lrt, n = nrow(DGEObj))$table
-
-y <- cpm(DGEObj, log = TRUE, prior.count = 1)
-lcpm <- cpm(DGEObj, log = TRUE)
-
 
 ####################################################################################
 ## done excel export
